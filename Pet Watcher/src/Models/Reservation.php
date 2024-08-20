@@ -12,6 +12,8 @@ class Reservation {
     private DateTime $dtm_end;
     private string $comment;
     private int $id_user;
+    private bool $validated;
+    private DateTime $dtm_created;
 
     use Hydratation;
 
@@ -107,6 +109,45 @@ class Reservation {
     public function setIdUser(int $id_user): self
     {
         $this->id_user = $id_user;
+
+        return $this;
+    }
+
+        /**
+     * Get the value of dtm_created
+     */
+    public function getDtmCreated(): string
+    {
+        return $this->dtm_created->format('Y-m-d');
+    }
+
+    /**
+     * Set the value of dtm_created
+     */
+    public function setDtmCreated(string|DateTime $dtm_created): void
+    {
+        if($dtm_created instanceof DateTime) {
+            $this->dtm_created = $dtm_created;
+        }
+        else {
+            $this->dtm_created = new DateTime($dtm_created);
+        }
+    }
+
+    /**
+     * Get the value of validated
+     */
+    public function isValidated(): bool
+    {
+        return $this->validated;
+    }
+
+    /**
+     * Set the value of validated
+     */
+    public function setValidated(bool $validated): self
+    {
+        $this->validated = $validated;
 
         return $this;
     }

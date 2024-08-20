@@ -2,6 +2,7 @@
 
 namespace src\Models;
 
+use DateTime;
 use src\Services\Hydratation;
 
 class User {
@@ -12,6 +13,7 @@ class User {
     private string $mail;
     private string $password;
     private int $id_role;
+    private DateTime $dtm_created;
 
     use Hydratation;
 
@@ -121,5 +123,26 @@ class User {
         $this->id_role = $id_role;
 
         return $this;
+    }
+
+            /**
+     * Get the value of dtm_created
+     */
+    public function getDtmCreated(): string
+    {
+        return $this->dtm_created->format('Y-m-d');
+    }
+
+    /**
+     * Set the value of dtm_created
+     */
+    public function setDtmCreated(string|DateTime $dtm_created): void
+    {
+        if($dtm_created instanceof DateTime) {
+            $this->dtm_created = $dtm_created;
+        }
+        else {
+            $this->dtm_created = new DateTime($dtm_created);
+        }
     }
 }

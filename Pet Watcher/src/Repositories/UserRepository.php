@@ -29,6 +29,14 @@ class UserRepository {
         return $retour;
     }
 
+    public function getAllUser (): array {
+        $sql = "SELECT * FROM ".PREFIXE."user;";
+        $statement = $this->DB->prepare($sql);
+        $statement->execute();
+        $retour = $statement->fetchAll(PDO::FETCH_CLASS, User::class);
+        return $retour;
+    }
+
     public function getThisUserById (int $id_user): User {
         $sql = "SELECT * FROM ".PREFIXE."user WHERE id_user = :id;";
         $statement = $this->DB->prepare($sql);
@@ -38,6 +46,38 @@ class UserRepository {
         $statement->setFetchMode(PDO::FETCH_CLASS, User::class);
         $retour = $statement->fetch();
         return $retour;
+    }
+
+    public function updateThisUserRole (User $user) {
+        try {
+            $sql = "UPDATE ".PREFIXE."user SET
+                        id_role = :id_role
+                    WHERE id_user = :id_user;";
+            $statement = $this->DB->prepare($sql);
+            $retour = $statement->execute([
+                ":id_role" => $user->getIdRole(),
+                ":id_user" => $user->getIdUser()
+            ]);
+            return $retour;
+        } catch (PDOException $error) {
+            throw new \Exception("Database error: " . $error->getMessage());
+        }
+    }
+
+    public function activateThisUser (User $user) {
+        try {
+            $sql = "UPDATE ".PREFIXE."user SET
+                        activated = :activated
+                    WHERE id_user = :id_user;";
+            $statement = $this->DB->prepare($sql);
+            $retour = $statement->execute([
+                ":activated" => $user->getIdRole(),
+                ":id_user" => $user->getIdUser()
+            ]);
+            return $retour;
+        } catch (PDOException $error) {
+            throw new \Exception("Database error: " . $error->getMessage());
+        }
     }
 
     public function login(string $mail, string $password): ?User {
