@@ -19,7 +19,7 @@ CREATE TABLE pet(
 # Table: role
 #------------------------------------------------------------
 
-CREATE TABLE role(
+CREATE TABLE pw_role(
         id_role         Int  Auto_increment  NOT NULL ,
         name            Varchar (255) NOT NULL
 	,CONSTRAINT role_PK PRIMARY KEY (id_role)
@@ -30,7 +30,7 @@ CREATE TABLE role(
 # Table: user
 #------------------------------------------------------------
 
-CREATE TABLE user(
+CREATE TABLE pw_user(
         id_user         Int  Auto_increment  NOT NULL ,
         lastname        Varchar (255) NOT NULL ,
         fistname        Varchar (255) NOT NULL ,
@@ -46,7 +46,7 @@ CREATE TABLE user(
 # Table: reservation
 #------------------------------------------------------------
 
-CREATE TABLE reservation(
+CREATE TABLE pw_reservation(
         id_reservation          Int  Auto_increment  NOT NULL ,
         dtm_start               Datetime NOT NULL ,
         dtm_end                 Datetime NOT NULL ,
@@ -61,7 +61,7 @@ CREATE TABLE reservation(
 # Table: reservation_detail
 #------------------------------------------------------------
 
-CREATE TABLE reservation_detail(
+CREATE TABLE pw_reservation_detail(
         id_reservation_detail   Int  Auto_increment  NOT NULL ,
         quantity                Int NOT NULL ,
         id_reservation          Int NOT NULL ,

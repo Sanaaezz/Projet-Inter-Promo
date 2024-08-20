@@ -5,7 +5,7 @@
     define('DB_NAME', 'pet_watcher');
     define('DB_USER', 'pet_watcher');
     define('DB_PWD', 'pet_watcher');
-    define('PREFIXE', 'pet_watcher_');
+    define('PREFIXE', 'pw_');
     define('HOME_URL', 'petwatcher/public/');
 
     // Ne pas toucher :
