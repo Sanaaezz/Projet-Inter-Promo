@@ -100,4 +100,51 @@ class UserRepository {
             throw new \Exception("Database error: " . $error->getMessage());
         }
     }
+
+    public function deleteThisUser (int $id_user): bool {
+        try {
+            $this->DB->beginTransaction();
+            $sql_detail = "DELETE FROM ".PREFIXE."reservation_detail 
+                        INNER JOIN ".PREFIXE."reservation ON ".PREFIXE."reservation_detail.id_reservation = ".PREFIXE."reservation.id_reservation
+                        WHERE ".PREFIXE."reservation.id_user = :id_user;";
+            $statement_detail = $this->DB->prepare($sql_detail);
+            $retour_detail = $statement_detail->execute([
+                ":id_user" => $id_user
+            ]);
+            if($retour_detail) {
+                $sql_resa = "DELETE FROM ".PREFIXE."reservation WHERE id_user = :id_user;";
+                $statement_resa = $this->DB->prepare($sql_resa);
+                $retour_resa = $statement_resa->execute([
+                    ":id_user" => $id_user
+                ]);
+                if($retour_resa) {
+                    $sql = "DELETE FROM ".PREFIXE."user WHERE id_user = :id_user;";
+                    $statement = $this->DB->prepare($sql);
+                    $retour = $statement->execute([
+                        ":id_user" => $id_user
+                    ]);
+                    if ($retour) {
+                        $this->DB->commit();
+                        return TRUE;
+                    } 
+                    else {
+                        $this->DB->rollBack();
+                        return FALSE;
+                    }
+                }
+                else {
+                    $this->DB->rollBack();
+                    return FALSE;
+                }
+            }
+            else {
+                $this->DB->rollBack();
+                return FALSE;
+            }
+        }
+        catch (PDOException $error) {
+            $this->DB->rollBack();
+            throw new \Exception("Database error: " . $error->getMessage());
+        }
+    }
 }

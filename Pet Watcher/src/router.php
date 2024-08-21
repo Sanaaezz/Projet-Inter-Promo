@@ -15,22 +15,22 @@ $routeComposee = Routing::routeComposee($route);
 
 switch ($route) {
     case HOME_URL:
-        if (!$HomeController->login()) {
-            $HomeController->index();
-        } else {
-            header("location:" . HOME_URL . "dashboard");
-            die;
-        };
+        // if (!$HomeController->login()) {
+        //     $HomeController->index();
+        // } else {
+        //     header("location:" . HOME_URL . "dashboard");
+        //     die;
+        // };
         break;
     case HOME_URL . 'login':
-        $HomeController->login();
+        // $HomeController->login();
         header("location:" . HOME_URL);
         break;
     case HOME_URL . 'register':
-        $HomeController->pageRegister();
+        // $HomeController->pageRegister();
         break;
     case HOME_URL . 'addUser':
-        $HomeController->addUser();
+        // $HomeController->addUser();
         header("location:" . HOME_URL);
         break;
 }
