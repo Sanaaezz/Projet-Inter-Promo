@@ -68,16 +68,38 @@ class ReservationRepository {
         return $retour;
     }
 
-    public function deleteThisReservation (int $id_reservation): bool {
+    public function deleteThisReservation(int $id_reservation): bool {
         try {
-            $sql = "DELETE FROM ".PREFIXE."reservation WHERE id_reservation = :id_reservation;";
-            $statement = $this->DB->prepare($sql);
-            $retour = $statement->execute([
+            $this->DB->beginTransaction();
+
+            $sql_detail = "DELETE FROM ".PREFIXE."reservation_detail WHERE id_reservation = :id_reservation;";
+            $statement_detail = $this->DB->prepare($sql_detail);
+            $retour_detail = $statement_detail->execute([
                 ":id_reservation" => $id_reservation
             ]);
-            return $retour;
-        }
+
+            if ($retour_detail) {
+                $sql = "DELETE FROM ".PREFIXE."reservation WHERE id_reservation = :id_reservation;";
+                $statement = $this->DB->prepare($sql);
+                $retour = $statement->execute([
+                    ":id_reservation" => $id_reservation
+                ]);
+                if ($retour) {
+                    $this->DB->commit();
+                    return TRUE;
+                } 
+                else {
+                    $this->DB->rollBack();
+                    return FALSE;
+                }
+            } 
+            else {
+                $this->DB->rollBack();
+                return FALSE;
+            }
+        } 
         catch (PDOException $error) {
+            $this->DB->rollBack();
             throw new \Exception("Database error: " . $error->getMessage());
         }
     }

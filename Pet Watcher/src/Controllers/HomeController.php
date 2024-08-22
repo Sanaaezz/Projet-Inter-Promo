@@ -4,48 +4,35 @@ namespace src\Controllers;
 
 use src\Services\Reponse;
 
-class HomeController
-{
-  use Reponse;
 
-  public function index(): void
-  {
-    $erreur = isset($_GET['erreur']) ? $_GET['erreur'] : '';
-    $this->render('accueil', ['erreur' => $erreur]);
-  }
+class HomeController {
+    use Reponse;
 
-  public function auth(string $password): void
-  {
-    if ($password === 'admin') {
-      $_SESSION['connecté'] = TRUE;
-      header('location: ' . HOME_URL . 'dashboard');
-      die();
-    } else {
-      header('location: ' . HOME_URL . '?erreur=connexion');
+    public function index() :void {
+        $error = isset($_GET['error']) ? $_GET['error'] : '';
+        $this->render("accueil", ["error" => $error]);
     }
-  }
 
- 
-  public function quit(): void
-  {
-    session_destroy();
-    header('location: ' . HOME_URL);
-  }
-
-
-  public function isAuth(): bool
-  {
-    if (isset($_SESSION['connecté'])) {
-      return true;
-    } else {
-      return false;
+    public function to_login() :void {
+        $error = isset($_GET['error']) ? $_GET['error'] : '';
+        $this->render("login", ["error" => $error]);
     }
-  }
 
+    public function to_register() :void {
+        $error = isset($_GET['error']) ? $_GET['error'] : '';
+        $this->render("register", ["error" => $error]);
+    }
 
-  public function page404(): void
-  {
-    header("HTTP/1.1 404 Not Found");
-    echo "La page est introuvable.";
-  }
+    public function deconnexion() :void {
+        session_start();
+        session_unset();
+        session_destroy();
+        header("Location: " . HOME_URL);
+        exit();
+    }
+
+    public function not_found():void {
+        http_response_code(404);
+        echo "Page not found";
+    }
 }
