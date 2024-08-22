@@ -48,6 +48,17 @@ class UserRepository {
         return $retour;
     }
 
+    public function getThisUserByMail (int $mail): User {
+        $sql = "SELECT * FROM ".PREFIXE."user WHERE mail = :mail;";
+        $statement = $this->DB->prepare($sql);
+        $statement->execute([
+            ":mail" => $mail
+        ]);
+        $statement->setFetchMode(PDO::FETCH_CLASS, User::class);
+        $retour = $statement->fetch();
+        return $retour;
+    }
+
     public function updateThisUserRole (User $user) {
         try {
             $sql = "UPDATE ".PREFIXE."user SET
