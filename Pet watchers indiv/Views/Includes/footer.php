@@ -1,0 +1,4 @@
+</body>
+<script src="./dist/app-bundle.js"></script>
+
+</html>
