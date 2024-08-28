@@ -21,12 +21,12 @@ class UserController {
         if (
             $user->getFirstname() &&
             $user->getLastname() &&
-            $user->getMail() 
+            $user->getMail() &&
 
-            // isset($data['password']) && isset($data['password2']) &&
-            // $data['password'] === $data['password2'] &&
+            isset($data['password']) && isset($data['password2']) &&
+            $data['password'] === $data['password2'] &&
 
-            // filter_var($user->getMail(), FILTER_VALIDATE_EMAIL)
+            filter_var($user->getMail(), FILTER_VALIDATE_EMAIL)
         ) {
             $DbConnexion = new Database();
             $UserRepository = UserRepository::getInstance($DbConnexion);

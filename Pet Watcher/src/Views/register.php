@@ -1,36 +1,51 @@
-<h1>Vous etes sur la page register</h1>
+<?php
 
-<form class="space-y-6" action="<?=HOME_URL?>register" method="POST">
+include __DIR__.'/includes/header.php';
+?>
 
-    <div>
-        <label for="mail" class="block text-sm font-medium leading-6 text-gray-900">Email :</label>
-        <div class="mt-2">
-          <input id="mail" name="mail" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-        </div>
+<h1 class="anek-gujarati max-w-sm mx-auto text-center text-6xl text-[#B87410] p-6">REGISTER</h1>
+
+<form action="<?=HOME_URL?>register" method="POST">
+<main class=" bg-center opacity-50 " style="background-image: url(../Assets/Images/kirk-photographer-dWDYKXgK1SI-unsplash.jpg)" id="bgImgRegister">
+  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+
+    <div class="w-full rounded-lg md:mt-0 sm:max-w-md xl:p-0 ">
+      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+
+        <form class="space-y-4 md:space-y-6" action="#">
+          <div>
+            <input type="text" name="lastname" id="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="lastname" required="">
+          </div>
+          <div>
+            <input type="text" name="firstname" id="firstname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="firstname" required="">
+          </div>
+          <div>
+            <input type="email" name="mail" id="mail" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="name@company.com" required="">
+          </div>
+          <div>
+            <input type="password" name="password" id="password" placeholder="Password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " required="">
+          </div>
+          <div>
+            <input type="password" name="password2" id="password2" placeholder="Confirm password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " required="">
+          </div>
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <input id="terms" aria-describedby="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="">
+            </div>
+            <div class="ml-3 text-sm">
+              <label for="terms" class="font-light text-gray-500 dark:text-gray-300">I accept the <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-white  bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Submit</button>
+        </form>
+      </div>
     </div>
+  </div>
+  </section>
 
-    <div>
-        <label for="lastname" class="block text-sm font-medium leading-6 text-gray-900">Your lastname :</label>
-        <div class="mt-2">
-            <input id="lastname" name="lastname" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-        </div>
-    </div>
-
-    <div>
-        <label for="firstname" class="block text-sm font-medium leading-6 text-gray-900">Your firstname :</label>
-        <div class="mt-2">
-            <input id="firstname" name="firstname" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-        </div>
-    </div>
-
-    <div>
-        <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password :</label>
-        <div class="mt-2">
-            <input id="password" name="password" type="password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-        </div>
-    </div>
-
-    <div>
-        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">S'enregistrer</button>
-    </div>
+</main>
 </form>
+
+<?php
+
+include __DIR__.'/includes/footer.php';
