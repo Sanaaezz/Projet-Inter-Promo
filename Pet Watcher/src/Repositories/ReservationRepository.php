@@ -132,8 +132,8 @@ class ReservationRepository {
         try {
             $sql = "SELECT ".PREFIXE."reservation.*, ".PREFIXE."reservation_detail.*, ".PREFIXE."pet.type
                     FROM ".PREFIXE."reservation
-                    INNER JOIN ".PREFIXE."reservation_detail ON ".PREFIXE."reservation_detail.id_reservation = ".PREFIXE."reservation.id_reservation
-                    INNER JOIN ".PREFIXE."pet ON ".PREFIXE."pet.id_pet = ".PREFIXE."reservation_detail.id_pet
+                    LEFT JOIN ".PREFIXE."reservation_detail ON ".PREFIXE."reservation_detail.id_reservation = ".PREFIXE."reservation.id_reservation
+                    LEFT JOIN ".PREFIXE."pet ON ".PREFIXE."pet.id_pet = ".PREFIXE."reservation_detail.id_pet
                     WHERE ".PREFIXE."reservation.id_user = :id_user;";
             $statement = $this->DB->prepare($sql);
             $statement->execute([

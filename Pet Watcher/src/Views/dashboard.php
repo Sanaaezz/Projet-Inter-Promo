@@ -22,6 +22,7 @@ $ReservationRepository = ReservationRepository::getInstance($database);
 $allReservation = $ReservationRepository->getAllReservation();
 $allReservationOffUser = $ReservationRepository->getAllDetailReservationByIdUser($user->getIdUser());
 
+
 if($role == 1) { ?>
     <div>
         <button onclick="location.href='<?= HOME_URL ?>reservation'">New reservation</button>
@@ -48,9 +49,9 @@ if($role == 1) { ?>
                         Validated
                 <?php
                 } ?></td>
-                <td><?= htmlspecialchars($Reservation['type']) ?></td>
-                <td><?= htmlspecialchars($Reservation['type']) ?></td>
-                <td><?= htmlspecialchars($Reservation['type']) ?></td>
+                <td><?= isset($Reservation['type']) ? htmlspecialchars($Reservation['type']) : '' ?></td>
+                <td><?= isset($Reservation['type']) ? htmlspecialchars($Reservation['type']) : '' ?></td>
+                <td><?= isset($Reservation['type']) ? htmlspecialchars($Reservation['type']) : '' ?></td>
             
             </tr>
 
@@ -62,7 +63,7 @@ if($role == 1) { ?>
 }
 elseif($role == 2) { ?>
         <div>
-        <button onclick="location.href='<?= HOME_URL ?>addResa'">New reservation</button>
+        <button onclick="location.href='<?= HOME_URL ?>reservation'">New reservation</button>
     </div>
     <div>
 
