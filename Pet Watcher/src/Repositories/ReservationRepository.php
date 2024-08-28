@@ -17,17 +17,44 @@ class ReservationRepository {
         require_once __DIR__.'/../../config.php';
     }
 
-    public function createReservation (Reservation $reservation) {
-        $sql = "INSERT INTO ".PREFIXE."reservation VALUES (NULL,?,?,?,?);";
-        $statement = $this->DB->prepare($sql);
-        $retour = $statement->execute([
-            $reservation->getDtmStart(),
-            $reservation->getDtmEnd(),
-            $reservation->getComment(),
-            $reservation->getIdUser(),
-        ]);
-        return $retour;
+    public static function getInstance(Database $db): self {
+        return new self($db);
     }
+
+    public function createReservation(Reservation $reservation) {
+
+        try {
+            $sql = "INSERT INTO ".PREFIXE."reservation (dtm_start, dtm_end, comment, id_user) VALUES (:dtm_start, :dtm_end, :comment, :id_user);";
+            $statement = $this->DB->prepare($sql);
+            $retour = $statement->execute([
+                ":dtm_start" => $reservation->getDtmStart(),
+                ":dtm_end" => $reservation->getDtmEnd(),
+                ":comment" => $reservation->getComment(),
+                ":id_user" => $reservation->getIdUser(),
+            ]);
+
+            if ($retour === false) {
+                throw new \RuntimeException("Erreur lors de l'exécution de la requête");
+            }
+
+            $lastInsertedId = $this->DB->lastInsertId();
+
+            $reservationData = [
+                'id_reservation' => $lastInsertedId,
+                'dtm_start' => $reservation->getDtmStart(),
+                'dtm_end' => $reservation->getDtmEnd(),
+                'comment' => $reservation->getComment(),
+                'id_user' => $reservation->getIdUser()
+            ];
+            
+            return new Reservation($reservationData);
+
+        } 
+        catch (PDOException $error) {
+            throw new \Exception("Database error: " . $error->getMessage());
+        }
+    }
+    
 
     public function getThisReservationById (int $id_reservation):Reservation {
         $sql = "SELECT * FROM ".PREFIXE."reservation WHERE id_reservation = :id_reservation;";
@@ -40,12 +67,45 @@ class ReservationRepository {
         return $reservation;
     }
 
-    public function getAllReservation ():array {
-        $sql = "SELECT * FROM ".PREFIXE."reservation;";
-        $statement = $this->DB->prepare($sql);
-        $statement->execute();
-        $retour = $statement->fetchAll(PDO::FETCH_CLASS, Reservation::class);
-        return $retour;
+    public function getAllReservation(): array {
+        try {
+            $sql = "SELECT 
+                    r.id_reservation,
+                    r.dtm_start,
+                    r.dtm_end,
+                    r.comment,
+                    r.id_user,
+                    r.validated,
+                    r.dtm_created,
+                    u.lastname,
+                    u.firstname,
+                    u.mail
+                FROM 
+                    ".PREFIXE."reservation r
+                INNER JOIN ".PREFIXE."user u ON r.id_user = u.id_user
+                GROUP BY 
+                    r.id_reservation,
+                    r.dtm_start,
+                    r.dtm_end,
+                    r.comment,
+                    r.id_user,
+                    r.validated,
+                    r.dtm_created,
+                    u.lastname,
+                    u.firstname,
+                    u.mail
+                ";
+            $statement = $this->DB->prepare($sql);
+            $statement->execute();
+            $retour = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($retour)) {
+                throw new \Exception("No reservation found");
+            }
+            return $retour;
+        } catch (\PDOException $error) {
+            throw new \Exception("Database error: " . $error->getMessage());
+        }
     }
 
     public function getAllReservationByDate(DateTime $date): array {
@@ -67,6 +127,26 @@ class ReservationRepository {
         $retour = $statement->fetchAll(PDO::FETCH_CLASS, Reservation::class);
         return $retour;
     }
+
+    public function getAllDetailReservationByIdUser(int $id_user): array {
+        try {
+            $sql = "SELECT ".PREFIXE."reservation.*, ".PREFIXE."reservation_detail.*, ".PREFIXE."pet.type
+                    FROM ".PREFIXE."reservation
+                    LEFT JOIN ".PREFIXE."reservation_detail ON ".PREFIXE."reservation_detail.id_reservation = ".PREFIXE."reservation.id_reservation
+                    LEFT JOIN ".PREFIXE."pet ON ".PREFIXE."pet.id_pet = ".PREFIXE."reservation_detail.id_pet
+                    WHERE ".PREFIXE."reservation.id_user = :id_user;";
+            $statement = $this->DB->prepare($sql);
+            $statement->execute([
+                ":id_user" => $id_user
+            ]);
+            $retour = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $retour;
+        }
+        catch (PDOException $error) {
+            throw new \Exception("Database error: " . $error->getMessage());
+        }
+    }
+    
 
     public function deleteThisReservation(int $id_reservation): bool {
         try {

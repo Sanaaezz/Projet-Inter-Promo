@@ -12,7 +12,8 @@ class User {
     private string $firstname;
     private string $mail;
     private string $password;
-    private int $id_role;
+    private int $id_role = 1;
+    private int $activated = 0;
     private DateTime $dtm_created;
 
     use Hydratation;
@@ -144,5 +145,23 @@ class User {
         else {
             $this->dtm_created = new DateTime($dtm_created);
         }
+    }
+
+    /**
+     * Get the value of activated
+     */
+    public function getActivated(): int
+    {
+        return $this->activated;
+    }
+
+    /**
+     * Set the value of activated
+     */
+    public function setActivated(int $activated): self
+    {
+        $this->activated = $activated;
+
+        return $this;
     }
 }

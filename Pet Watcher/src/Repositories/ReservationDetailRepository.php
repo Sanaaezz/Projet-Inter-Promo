@@ -16,6 +16,10 @@ class ReservationDetailRepository {
         require_once __DIR__.'/../../config.php';
     }
 
+    public static function getInstance(Database $db): self {
+        return new self($db);
+    }
+
     public function createReservationDetail (Reservation_detail $reservation_detail) {
         $sql = "INSERT INTO ".PREFIXE."reservation_detail VALUES (NULL,?,?,?);";
         $statement = $this->DB->prepare($sql);
@@ -56,8 +60,8 @@ class ReservationDetailRepository {
         ";
         $statement = $this->DB->prepare($sql);
         $statement->execute([
-            ':dtm_start' => $dtm_start,
-            ':dtm_end' => $dtm_end
+            ':dtm_start' => $dtm_start->format('Y-m-d'),
+            ':dtm_end' => $dtm_end->format('Y-m-d')
         ]);
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
