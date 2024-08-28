@@ -2,6 +2,10 @@
 
 include __DIR__.'/includes/header.php';
 
+$erreur = isset($_SESSION['erreur']) ? $_SESSION['erreur'] : '';
+$_SESSION['erreur'] = '';
+$succes = isset($_SESSION['succes']) ? $_SESSION['succes'] : '';
+$_SESSION['succes'] = '';
 
 
 ?>
@@ -11,6 +15,10 @@ include __DIR__.'/includes/header.php';
 
 <a href="<?= HOME_URL ?>login"">Login</a>
 <a href="<?= HOME_URL ?>register"">Register</a>
+
+<p> <?= $erreur ?> </p>
+<p> <?= $succes ?> </p>
+
 
 
 <?php

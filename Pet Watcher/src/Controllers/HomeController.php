@@ -23,6 +23,31 @@ class HomeController {
         $this->render("register", ["error" => $error]);
     }
 
+    public function to_reservation() :void {
+        $error = isset($_GET['error']) ? $_GET['error'] : '';
+        $this->render("reservation", ["error" => $error]);
+    }
+
+    public function to_reservationDetail() :void {
+        $error = isset($_GET['error']) ? $_GET['error'] : '';
+        $this->render("reservationDetail", ["error" => $error]);
+    }
+
+    public function to_this_reservation() :void {
+        $error = isset($_GET['error']) ? $_GET['error'] : '';
+        $this->render("showReservation", ["error" => $error]);
+    }
+
+    public function pageDashboard():void {
+        if(isset($_GET['error'])) {
+            $error = htmlspecialchars($_GET['error']);
+        } 
+        else {
+            $error = '';
+        }
+        $this->render("dashboard", ["error"=>$error]);
+    }
+
     public function deconnexion() :void {
         session_start();
         session_unset();

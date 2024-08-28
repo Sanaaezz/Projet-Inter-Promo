@@ -15,16 +15,18 @@ class UserRepository {
         require_once __DIR__.'/../../config.php';
     }
 
+    public static function getInstance(Database $db): self {
+        return new self($db);
+    }
+
     public function createUser (User $user) {
-        $password = password_hash($user->getPassword(), PASSWORD_DEFAULT);
-        $sql = "INSERT INTO ".PREFIXE."user VALUES (NULL,?,?,?,?,?);";
+        $sql = "INSERT INTO ".PREFIXE."user(lastname, firstname, mail, password) VALUES (:lastname, :firstname, :mail, :password);";
         $statement = $this->DB->prepare($sql);
         $retour = $statement->execute([
-            $user->getLastname(),
-            $user->getFirstname(),
-            $user->getMail(),
-            $password,
-            $user->getIdRole(),
+            ":lastname" => $user->getLastname(),
+            ":firstname" => $user->getFirstname(),
+            ":mail" => $user->getMail(),
+            ":password" => $user->getPassword()
         ]);
         return $retour;
     }
@@ -48,7 +50,7 @@ class UserRepository {
         return $retour;
     }
 
-    public function getThisUserByMail (int $mail): User {
+    public function getThisUserByMail (string $mail): bool|User {
         $sql = "SELECT * FROM ".PREFIXE."user WHERE mail = :mail;";
         $statement = $this->DB->prepare($sql);
         $statement->execute([
@@ -56,7 +58,12 @@ class UserRepository {
         ]);
         $statement->setFetchMode(PDO::FETCH_CLASS, User::class);
         $retour = $statement->fetch();
-        return $retour;
+        if($retour) {
+            return $retour;
+        }
+        else {
+            return FALSE;
+        }
     }
 
     public function updateThisUserRole (User $user) {
@@ -93,16 +100,27 @@ class UserRepository {
 
     public function login(string $mail, string $password): ?User {
         try {
-            $sql = "SELECT * FROM ".PREFIXE."user WHERE mail = :mail;";
+            $sql = "SELECT * FROM ".PREFIXE."user WHERE mail = :mail LIMIT 1;";
             $statement = $this->DB->prepare($sql);
             $statement->execute([
                 ":mail" => $mail,
             ]);
 
-            $statement->setFetchMode(PDO::FETCH_CLASS, User::class);
-            $user = $statement->fetch();
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-            if ($user && password_verify($password, $user->getPassword())) {
+            if($result) {
+                $user = new User();
+                $user->setIdUser($result['id_user']);
+                $user->setLastname($result['lastname']);
+                $user->setFirstname($result['firstname']);
+                $user->setMail($result['mail']);
+                $user->setPassword($result['password']);
+                $user->setIdRole($result['id_role']);
+                $user->setActivated($result['activated']);
+                $user->setDtmCreated($result['dtm_created']);
+            }
+
+            if (password_verify($password, $result['password'])) {
                 return $user;
             } else {
                 return null;

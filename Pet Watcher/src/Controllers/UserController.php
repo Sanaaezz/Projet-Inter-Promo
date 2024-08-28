@@ -2,6 +2,7 @@
 
 namespace src\Controllers;
 
+use src\Models\Database;
 use src\Models\User;
 use src\Repositories\UserRepository;
 use src\Services\Reponse;
@@ -12,27 +13,28 @@ class UserController {
     use Securite;
 
     public function register() {
-        $data = !empty($_POST) ? self::sanitize($_POST) : self::sanitize(json_decode(file_get_contents("php://input")));
-
+        parse_str(file_get_contents("php://input") , $data);
+        $data = self::sanitize($data);
+        
         $user = new User($data);
 
         if (
             $user->getFirstname() &&
             $user->getLastname() &&
-            $user->getMail() &&
+            $user->getMail() 
 
-            isset($data['password']) && isset($data['password2']) &&
-            $data['password'] === $data['password2'] &&
+            // isset($data['password']) && isset($data['password2']) &&
+            // $data['password'] === $data['password2'] &&
 
-            filter_var($user->getMail(), FILTER_VALIDATE_EMAIL)
+            // filter_var($user->getMail(), FILTER_VALIDATE_EMAIL)
         ) {
-            $UserRepo = new UserRepository;
-            $userExistant = $UserRepo->getThisUserByMail($user->getMail());
-            if (!$userExistant) {
+            $DbConnexion = new Database();
+            $UserRepository = UserRepository::getInstance($DbConnexion);
+            $userExistant = $UserRepository->getThisUserByMail($user->getMail());
+            if ($userExistant == FALSE) {
                 $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
-                $UserRepo = new UserRepository;
-                $UserRepo->createUser($user);
-                header('Location: '.HOME_URL);
+                $UserRepository->createUser($user);
+                $this->render("accueil", ["succes" => $_SESSION['succes']]);
                 exit;
             } 
             else {
@@ -41,22 +43,30 @@ class UserController {
         }
     }
 
-    public function login() {
-        if (isset($_POST['mail']) && isset($_POST['password'])){
-            $UserRepo = new UserRepository;
+    public function login():void {
+        $data = file_get_contents("php://input");
+        parse_str($data, $user);
 
-            $user = $UserRepo->login($_POST['mail'], $_POST['password']);
-
-            if ($user) {
-              $_SESSION['connecté'] = true;
-              $_SESSION['user'] = serialize($user);
-
-              header('location: '.HOME_URL.'dashboard');
-              exit;
-            } else {
-              header('location: '.HOME_URL.'connexion?erreur=denied');
+        if(!empty($user)) {
+            $user = $this->sanitize($user);
+            $email = $user['str_email'];
+            $mdp = $user['str_mdp'];
+            $DbConnexion = new Database();
+            $UserRepository = UserRepository::getInstance($DbConnexion);
+            $user = $UserRepository->login($email, $mdp);
+            if($user){
+                $_SESSION["connecte"] = TRUE;
+                $_SESSION["user"] = serialize($user);
+                $_SESSION['succes'] = "Vous êtes connecté";
+                $this->render("dashboard",["succes" => $_SESSION['succes']]);
+                die();
+            } 
+            else{
+                $_SESSION["erreur"] = "Echec de connexion";
+                $this->render('connexion', ["erreur" => $_SESSION["erreur"]]);
+                die();
             }
-          }
+        }
     }
 
 }

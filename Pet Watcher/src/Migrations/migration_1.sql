@@ -49,7 +49,7 @@ CREATE TABLE pw_reservation(
     id_reservation          Int  Auto_increment  NOT NULL ,
     dtm_start               Datetime NOT NULL ,
     dtm_end                 Datetime NOT NULL ,
-    comment                 Longtext,
+    comment                 Longtext DEFAULT '',
     id_user                 Int NOT NULL ,
     validated               TinyInt(1) NOT NULL DEFAULT 0 ,
     dtm_created             Datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
