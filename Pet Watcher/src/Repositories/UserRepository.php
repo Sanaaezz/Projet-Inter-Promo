@@ -35,7 +35,7 @@ class UserRepository {
         $sql = "SELECT * FROM ".PREFIXE."user;";
         $statement = $this->DB->prepare($sql);
         $statement->execute();
-        $retour = $statement->fetchAll(PDO::FETCH_CLASS, User::class);
+        $retour = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $retour;
     }
 

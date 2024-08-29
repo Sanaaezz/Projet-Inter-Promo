@@ -23,15 +23,25 @@
     </button>
     <div class="hidden w-full md:block md:w-auto" id="navbar-solid-bg">
       <ul class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
-        <li>
-          <a href="<?= HOME_URL ?>login" class="block py-2 px-3 md:p-0 text-yellow-600 rounded md:hover:bg-transparent md:border-0 dark: text-amber-800  md:dark:hover:bg-transparent">Login</a>
-        </li>
-        <li>
-          <a href="<?= HOME_URL ?>register" class="block py-2 px-3 md:p-0 text-yellow-600 rounded md:hover:bg-transparent md:border-0 dark: text-amber-800 dark:hover:bg-gray-700  md:dark:hover:bg-transparent">Register</a>
-        </li>
-        <li>
-          <a href="<?= HOME_URL ?>deconnexion" class="block py-2 px-3 md:p-0 text-yellow-600 rounded md:hover:bg-transparent md:border-0 dark: text-amber-800 dark:hover:bg-gray-700  md:dark:hover:bg-transparent">Disconnect</a>
-        </li>
+        <?php
+        if (isset($_SESSION['user'])) { ?>
+          <li>
+            <a href="<?= HOME_URL ?>deconnexion" class="block py-2 px-3 md:p-0 text-yellow-600 rounded md:hover:bg-transparent md:border-0 dark: text-amber-800 dark:hover:bg-gray-700  md:dark:hover:bg-transparent">Disconnect</a>
+          </li>
+          <li>
+            <a href="<?= HOME_URL ?>reservation" class="block py-2 px-3 md:p-0 text-yellow-600 rounded md:hover:bg-transparent md:border-0 dark: text-amber-800 dark:hover:bg-gray-700  md:dark:hover:bg-transparent">New Reservation</a>
+          </li>
+<?php
+        }
+        else { ?>
+          <li>
+            <a href="<?= HOME_URL ?>login" class="block py-2 px-3 md:p-0 text-yellow-600 rounded md:hover:bg-transparent md:border-0 dark: text-amber-800  md:dark:hover:bg-transparent">Login</a>
+          </li>
+          <li>
+            <a href="<?= HOME_URL ?>register" class="block py-2 px-3 md:p-0 text-yellow-600 rounded md:hover:bg-transparent md:border-0 dark: text-amber-800 dark:hover:bg-gray-700  md:dark:hover:bg-transparent">Register</a>
+          </li>
+<?php
+        } ?>
       </ul>
     </div>
   </div>
